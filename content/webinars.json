@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "slug": "distributional-semantics-martin-hilpert",
+    "titleEn": "Distributional Semantics: Methods and their Application to Linguistic Research",
+    "titleFa": "معناشناسی توزیعی؛ رویکرد‌ها و کاربرد در پژوهش‌های زبان‌شناسی",
+    "dateISO": "2024-01-27",
+    "dateEn": "Saturday, January 27th, 2024",
+    "dateFa": "شنبه، ۷ بهمن‌ماه ۱۴۰۲",
+    "speaker": "Prof. Dr. Martin Hilpert",
+    "topicTags": [
+      "Semantics",
+      "Computational Linguistics",
+      "NLP"
+    ],
+    "recordingUrl": "https://youtu.be/K907TO_cmSk?si=lwrpvZsnuv_qe2oF",
+    "rightsApproved": true,
+    "published": true
+  }
+]
