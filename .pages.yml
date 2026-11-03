@@ -100,7 +100,7 @@ content:
       - { name: topicTags, label: Topic tags, type: string, list: true }
       - { name: descriptionEn, label: Description (English), type: text }
       - { name: descriptionFa, label: Description (Persian), type: text }
-      - { name: recordingStatus, label: Recording status, type: select, options: [{ label: Available, value: available }, { label: Not recorded, value: not_recorded }, { label: Speaker has not permitted sharing, value: restricted }, { label: Status not confirmed, value: unknown }] }
+      - {name: recordingStatus, label: Recording status, type: select, required: true, options: { values: [{ name: available, label: Available (recording can be shared) }, { name: not_recorded, label: Not recorded }, { name: restricted, label: Speaker has not permitted sharing }, { name: unknown, label: Status not confirmed }] }
       - { name: recordingUrl, label: Approved YouTube URL, type: string }
       - { name: rightsApproved, label: Explicit sharing permission received, type: boolean }
       - { name: published, label: Published, type: boolean }
