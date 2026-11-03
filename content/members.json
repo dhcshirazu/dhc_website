@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "name": "Mehrzad Barzegar",
+    "roleEn": "Chair",
+    "roleFa": "دبیر انجمن",
+    "termEn": "2025-2026",
+    "termFa": "1404-1405",
+    "bioEn": "Language Enthusiast",
+    "bioFa": "زبان‌دوست",
+    "photoUrl": "/media/IMG_4140.jpg",
+    "photoAltEn": "a person standing in front of a mirror in a fragmanted view",
+    "photoAltFa": "فردی جلوی چند آینه که حالت شکسته ایجاد کرده نشسته است",
+    "consentToPublish": true,
+    "photoConsent": true,
+    "current": true
+  }
+]
