@@ -1,6 +1,15 @@
 media:
   input: content/media
   output: /media
+  categories:
+    - image
+  extensions:
+    - jpg
+    - jpeg
+    - png
+    - webp
+  rename: safe
+
 content:
   - name: site-settings
     label: DHC site settings and contacts
@@ -11,12 +20,14 @@ content:
       - name: publicBaseUrl
         label: Public site URL
         type: string
+        description: Full published URL, without a trailing slash.
       - name: associationEmail
         label: DHC contact email
         type: string
       - name: appsScriptWebAppUrl
         label: Google Apps Script web app URL
         type: string
+        description: Deployed Apps Script URL ending in /exec. Keep blank until the form endpoint is deployed.
       - name: certificateNumberPattern
         label: Certificate number regex (placeholder until approved)
         type: string
@@ -30,31 +41,60 @@ content:
         label: Student association lead
         type: object
         fields:
-          - { name: name, label: Public name, type: string }
-          - { name: roleEn, label: Role (English), type: string }
-          - { name: roleFa, label: Role (Persian), type: string }
-          - { name: email, label: Public email, type: string }
-          - { name: termEn, label: Term (English), type: string }
-          - { name: termFa, label: Term (Persian), type: string }
+          - name: name
+            label: Public name
+            type: string
+          - name: roleEn
+            label: Role (English)
+            type: string
+          - name: roleFa
+            label: Role (Persian)
+            type: string
+          - name: email
+            label: Public email
+            type: string
+          - name: termEn
+            label: Term (English)
+            type: string
+          - name: termFa
+            label: Term (Persian)
+            type: string
       - name: supervisor
         label: Faculty supervisor
         type: object
         fields:
-          - { name: name, label: Public name, type: string }
-          - { name: roleEn, label: Role (English), type: string }
-          - { name: roleFa, label: Role (Persian), type: string }
-          - { name: email, label: Public email, type: string }
+          - name: name
+            label: Public name
+            type: string
+          - name: roleEn
+            label: Role (English)
+            type: string
+          - name: roleFa
+            label: Role (Persian)
+            type: string
+          - name: email
+            label: Public email
+            type: string
       - name: social
         label: Official social links
         type: object
         fields:
-          - { name: telegram, label: Telegram URL, type: string }
-          - { name: instagram, label: Instagram URL, type: string }
-          - { name: linkedin, label: LinkedIn URL, type: string }
-          - { name: other, label: Other official channel URL, type: string }
+          - name: telegram
+            label: Telegram URL
+            type: string
+          - name: instagram
+            label: Instagram URL
+            type: string
+          - name: linkedin
+            label: LinkedIn URL
+            type: string
+          - name: other
+            label: Other official channel URL
+            type: string
       - name: contactRetentionMonths
         label: Contact-message retention period (months)
         type: number
+
   - name: events
     label: Events
     type: file
@@ -62,27 +102,103 @@ content:
     format: json
     list: true
     fields:
-      - { name: slug, label: URL slug (lowercase, hyphenated), type: string, required: true, pattern: "^[a-z0-9-]+$" }
-      - { name: titleEn, label: Title (English), type: string, required: true }
-      - { name: titleFa, label: Title (Persian), type: string, required: true }
-      - { name: dateISO, label: Gregorian date YYYY-MM-DD, type: date, required: true }
-      - { name: dateEn, label: Display date (English), type: string, required: true }
-      - { name: dateFa, label: Display date (Persian calendar), type: string, required: true }
-      - { name: speaker, label: Speaker name, type: string, required: true }
-      - { name: speakerTimeZone, label: Speaker timezone (IANA), type: string }
-      - { name: speakerTime, label: Speaker local time, type: string }
-      - { name: tehranTime, label: Tehran time, type: string }
-      - { name: languageEn, label: Session language (English display), type: string }
-      - { name: languageFa, label: Session language (Persian display), type: string }
-      - { name: modality, label: Modality (online or in-person), type: select, options: [{ label: Online, value: online }, { label: In person, value: in-person }] }
-      - { name: platform, label: Platform or venue, type: string }
-      - { name: abstractEn, label: Abstract (English), type: text }
-      - { name: abstractFa, label: Abstract (Persian), type: text }
-      - { name: topicTags, label: Topic tags, type: string, list: true }
-      - { name: registrationUrl, label: Registration URL (HTTPS), type: string }
-      - { name: attendanceUrl, label: Attendance URL (HTTPS; remove/expire after session), type: string }
-      - { name: linkExpiresAt, label: Attendance/registration link expiry (ISO datetime), type: string }
-      - { name: published, label: Published, type: boolean }
+      - name: slug
+        label: URL slug (lowercase, hyphenated)
+        type: string
+        required: true
+        pattern: "^[a-z0-9-]+$"
+      - name: titleEn
+        label: Title (English)
+        type: string
+        required: true
+      - name: titleFa
+        label: Title (Persian)
+        type: string
+        required: true
+      - name: dateISO
+        label: Gregorian date (YYYY-MM-DD)
+        type: date
+        required: true
+      - name: dateEn
+        label: Display date (English)
+        type: string
+        required: true
+      - name: dateFa
+        label: Display date (Persian calendar)
+        type: string
+        required: true
+      - name: speaker
+        label: Speaker name
+        type: string
+        required: true
+      - name: speakerTimeZone
+        label: Speaker timezone (IANA, e.g. Asia/Tehran)
+        type: string
+        required: true
+        description: Required before publishing. Use a recognized IANA timezone such as Asia/Tehran or Europe/Berlin.
+      - name: speakerTime
+        label: Speaker local time (HH:MM)
+        type: string
+        required: true
+        description: Required before publishing. Use 24-hour time.
+      - name: tehranTime
+        label: Tehran time (HH:MM)
+        type: string
+        required: true
+        description: Required before publishing. Use 24-hour time.
+      - name: languageEn
+        label: Session language (English display)
+        type: string
+        required: true
+        description: Required before publishing.
+      - name: languageFa
+        label: Session language (Persian display)
+        type: string
+        required: true
+        description: Required before publishing.
+      - name: modality
+        label: Modality
+        type: select
+        required: true
+        options:
+          placeholder: Choose a modality
+          values:
+            - name: online
+              label: Online
+            - name: in-person
+              label: In person
+        description: Required before publishing.
+      - name: platform
+        label: Platform or venue
+        type: string
+        required: true
+        description: Required before publishing. For online events, enter Google Meet, Skype, Adobe Connect, or the relevant platform.
+      - name: abstractEn
+        label: Abstract (English)
+        type: text
+        description: Enter an abstract in English, Persian, or both. At least one language is required before publishing.
+      - name: abstractFa
+        label: Abstract (Persian)
+        type: text
+      - name: topicTags
+        label: Topic tags
+        type: string
+        list: true
+      - name: registrationUrl
+        label: Registration URL (HTTPS)
+        type: string
+      - name: attendanceUrl
+        label: Attendance URL (HTTPS; remove or expire after the session)
+        type: string
+      - name: linkExpiresAt
+        label: Link expiry (ISO 8601 datetime with timezone)
+        type: string
+        description: Example 2026-11-20T17:00:00+03:30. Leave blank if there is no separate expiry; event links are hidden after the event date.
+      - name: published
+        label: Published
+        type: boolean
+        description: Enable only after all required event information is complete. Published events are checked by the website build.
+
   - name: webinars
     label: Webinar archive
     type: file
@@ -90,20 +206,74 @@ content:
     format: json
     list: true
     fields:
-      - { name: slug, label: URL slug, type: string, required: true, pattern: "^[a-z0-9-]+$" }
-      - { name: titleEn, label: Title (English), type: string, required: true }
-      - { name: titleFa, label: Title (Persian), type: string, required: true }
-      - { name: dateISO, label: Gregorian date YYYY-MM-DD, type: date, required: true }
-      - { name: dateEn, label: Display date (English), type: string, required: true }
-      - { name: dateFa, label: Display date (Persian calendar), type: string, required: true }
-      - { name: speaker, label: Speaker, type: string, required: true }
-      - { name: topicTags, label: Topic tags, type: string, list: true }
-      - { name: descriptionEn, label: Description (English), type: text }
-      - { name: descriptionFa, label: Description (Persian), type: text }
-      - { name: recordingStatus, label: Recording status, type: select, required: true, options: { values: [{ name: available, label: Available (recording can be shared) }, { name: not_recorded, label: Not recorded }, { name: restricted, label: Speaker has not permitted sharing }, { name: unknown, label: Status not confirmed }] }
-      - { name: recordingUrl, label: Approved YouTube URL, type: string }
-      - { name: rightsApproved, label: Explicit sharing permission received, type: boolean }
-      - { name: published, label: Published, type: boolean }
+      - name: slug
+        label: URL slug (lowercase, hyphenated)
+        type: string
+        required: true
+        pattern: "^[a-z0-9-]+$"
+      - name: titleEn
+        label: Title (English)
+        type: string
+        required: true
+      - name: titleFa
+        label: Title (Persian)
+        type: string
+        required: true
+      - name: dateISO
+        label: Gregorian date (YYYY-MM-DD)
+        type: date
+        required: true
+      - name: dateEn
+        label: Display date (English)
+        type: string
+        required: true
+      - name: dateFa
+        label: Display date (Persian calendar)
+        type: string
+        required: true
+      - name: speaker
+        label: Speaker
+        type: string
+        required: true
+      - name: topicTags
+        label: Topic tags
+        type: string
+        list: true
+      - name: descriptionEn
+        label: Description (English)
+        type: text
+        description: Enter a description in English, Persian, or both. At least one language is required before publishing.
+      - name: descriptionFa
+        label: Description (Persian)
+        type: text
+      - name: recordingStatus
+        label: Recording status
+        type: select
+        required: true
+        options:
+          placeholder: Choose a recording status
+          values:
+            - name: available
+              label: Available (recording can be shared)
+            - name: not_recorded
+              label: Not recorded
+            - name: restricted
+              label: Speaker has not permitted sharing
+            - name: unknown
+              label: Status not confirmed
+      - name: recordingUrl
+        label: Approved YouTube URL
+        type: string
+        description: Enter a YouTube HTTPS URL only if the recording is shareable and rights approval is true.
+      - name: rightsApproved
+        label: Explicit sharing permission received
+        type: boolean
+        description: Enable only after the speaker or rights holder has explicitly permitted public sharing.
+      - name: published
+        label: Published
+        type: boolean
+        description: Enable only after the speaker, date, description, and recording status have been checked.
+
   - name: articles
     label: Articles and tutorials
     type: file
@@ -111,22 +281,67 @@ content:
     format: json
     list: true
     fields:
-      - { name: slug, label: URL slug, type: string, required: true, pattern: "^[a-z0-9-]+$" }
-      - { name: titleEn, label: Title (English), type: string, required: true }
-      - { name: titleFa, label: Title (Persian), type: string, required: true }
-      - { name: author, label: Author(s), type: string }
-      - { name: dateISO, label: Publication date YYYY-MM-DD, type: date, required: true }
-      - { name: dateEn, label: Display date (English), type: string, required: true }
-      - { name: dateFa, label: Display date (Persian), type: string, required: true }
-      - { name: summaryEn, label: Summary (English), type: text }
-      - { name: summaryFa, label: Summary (Persian), type: text }
-      - { name: bodyEn, label: Article body (English; plain paragraphs), type: text }
-      - { name: bodyFa, label: Article body (Persian; plain paragraphs), type: text }
-      - { name: imageUrl, label: Optional article image, type: image, options: { path: articles } }
-      - { name: imageAltEn, label: Image alt text (English), type: string }
-      - { name: imageAltFa, label: Image alt text (Persian), type: string }
-      - { name: topicTags, label: Topic tags, type: string, list: true }
-      - { name: published, label: Published, type: boolean }
+      - name: slug
+        label: URL slug (lowercase, hyphenated)
+        type: string
+        required: true
+        pattern: "^[a-z0-9-]+$"
+      - name: titleEn
+        label: Title (English)
+        type: string
+        required: true
+      - name: titleFa
+        label: Title (Persian)
+        type: string
+        required: true
+      - name: author
+        label: Author(s)
+        type: string
+      - name: dateISO
+        label: Publication date (YYYY-MM-DD)
+        type: date
+        required: true
+      - name: dateEn
+        label: Display date (English)
+        type: string
+        required: true
+      - name: dateFa
+        label: Display date (Persian)
+        type: string
+        required: true
+      - name: summaryEn
+        label: Summary (English)
+        type: text
+      - name: summaryFa
+        label: Summary (Persian)
+        type: text
+      - name: bodyEn
+        label: Article body (English; plain paragraphs)
+        type: text
+        description: Enter the article in English, Persian, or both. At least one body is required before publishing.
+      - name: bodyFa
+        label: Article body (Persian; plain paragraphs)
+        type: text
+      - name: imageUrl
+        label: Optional article image
+        type: image
+        options:
+          path: articles
+      - name: imageAltEn
+        label: Image alt text (English)
+        type: string
+      - name: imageAltFa
+        label: Image alt text (Persian)
+        type: string
+      - name: topicTags
+        label: Topic tags
+        type: string
+        list: true
+      - name: published
+        label: Published
+        type: boolean
+        description: Enable only after editorial review and after checking both language versions and image alternative text, if an image is used.
+
   - name: members
     label: Current and former members
     type: file
@@ -134,19 +349,54 @@ content:
     format: json
     list: true
     fields:
-      - { name: name, label: Public name, type: string, required: true }
-      - { name: roleEn, label: Role (English), type: string, required: true }
-      - { name: roleFa, label: Role (Persian), type: string, required: true }
-      - { name: termEn, label: Term (English), type: string }
-      - { name: termFa, label: Term (Persian), type: string }
-      - { name: bioEn, label: Short bio (English), type: text }
-      - { name: bioFa, label: Short bio (Persian), type: text }
-      - { name: photoUrl, label: Optional member photo, type: image, options: { path: members } }
-      - { name: photoAltEn, label: Photo alt text (English), type: string }
-      - { name: photoAltFa, label: Photo alt text (Persian), type: string }
-      - { name: consentToPublish, label: Explicit consent to publish name and role, type: boolean }
-      - { name: photoConsent, label: Explicit consent to publish this photo, type: boolean }
-      - { name: current, label: Current member, type: boolean }
+      - name: name
+        label: Public name
+        type: string
+        required: true
+      - name: roleEn
+        label: Role (English)
+        type: string
+        required: true
+      - name: roleFa
+        label: Role (Persian)
+        type: string
+        required: true
+      - name: termEn
+        label: Term (English)
+        type: string
+      - name: termFa
+        label: Term (Persian)
+        type: string
+      - name: bioEn
+        label: Short bio (English)
+        type: text
+      - name: bioFa
+        label: Short bio (Persian)
+        type: text
+      - name: photoUrl
+        label: Optional member photo
+        type: image
+        options:
+          path: members
+      - name: photoAltEn
+        label: Photo alt text (English)
+        type: string
+      - name: photoAltFa
+        label: Photo alt text (Persian)
+        type: string
+      - name: consentToPublish
+        label: Explicit consent to publish name and role
+        type: boolean
+        description: Enable only after the member has explicitly agreed to publication of their name and role.
+      - name: photoConsent
+        label: Explicit consent to publish this photo
+        type: boolean
+        description: Enable only after separate permission to publish the photograph has been received.
+      - name: current
+        label: Current member
+        type: boolean
+        description: Enable for current members. Leave disabled for former members.
+
   - name: announcements
     label: Announcements
     type: file
@@ -154,17 +404,45 @@ content:
     format: json
     list: true
     fields:
-      - { name: titleEn, label: Title (English), type: string, required: true }
-      - { name: titleFa, label: Title (Persian), type: string, required: true }
-      - { name: bodyEn, label: Text (English), type: text }
-      - { name: bodyFa, label: Text (Persian), type: text }
-      - { name: dateISO, label: Date YYYY-MM-DD, type: date, required: true }
-      - { name: dateEn, label: Display date (English), type: string, required: true }
-      - { name: dateFa, label: Display date (Persian), type: string, required: true }
-      - { name: linkUrl, label: Optional related page URL, type: string }
-      - { name: linkLabelEn, label: Link label (English), type: string }
-      - { name: linkLabelFa, label: Link label (Persian), type: string }
-      - { name: published, label: Published, type: boolean }
+      - name: titleEn
+        label: Title (English)
+        type: string
+        required: true
+      - name: titleFa
+        label: Title (Persian)
+        type: string
+        required: true
+      - name: bodyEn
+        label: Text (English)
+        type: text
+      - name: bodyFa
+        label: Text (Persian)
+        type: text
+      - name: dateISO
+        label: Date (YYYY-MM-DD)
+        type: date
+        required: true
+      - name: dateEn
+        label: Display date (English)
+        type: string
+        required: true
+      - name: dateFa
+        label: Display date (Persian)
+        type: string
+        required: true
+      - name: linkUrl
+        label: Optional related page URL
+        type: string
+      - name: linkLabelEn
+        label: Link label (English)
+        type: string
+      - name: linkLabelFa
+        label: Link label (Persian)
+        type: string
+      - name: published
+        label: Published
+        type: boolean
+
   - name: certificates
     label: Certificate verification records (public fields only)
     type: file
@@ -172,10 +450,31 @@ content:
     format: json
     list: true
     fields:
-      - { name: number, label: Certificate number, type: string, required: true }
-      - { name: holderNameEn, label: Holder name (English), type: string, required: true }
-      - { name: holderNameFa, label: Holder name (Persian), type: string, required: true }
-      - { name: issueDateEn, label: Issue date (English), type: string, required: true }
-      - { name: issueDateFa, label: Issue date (Persian calendar), type: string, required: true }
-      - { name: descriptionEn, label: Certificate type/course (English), type: string, required: true }
-      - { name: descriptionFa, label: Certificate type/course (Persian), type: string, required: true }
+      - name: number
+        label: Certificate number
+        type: string
+        required: true
+      - name: holderNameEn
+        label: Holder name (English)
+        type: string
+        required: true
+      - name: holderNameFa
+        label: Holder name (Persian)
+        type: string
+        required: true
+      - name: issueDateEn
+        label: Issue date (English)
+        type: string
+        required: true
+      - name: issueDateFa
+        label: Issue date (Persian calendar)
+        type: string
+        required: true
+      - name: descriptionEn
+        label: Certificate type/course (English)
+        type: string
+        required: true
+      - name: descriptionFa
+        label: Certificate type/course (Persian)
+        type: string
+        required: true
